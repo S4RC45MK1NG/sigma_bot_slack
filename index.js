@@ -165,18 +165,22 @@ app.command("/remind-sigmabot", async ({ command, ack, respond }) => {
     return;
   }
   
-  await app.client.chat.postMessage({ 
-    channel: command.user_id,
-    text: `Okay! I will remind you to "${reminderText}" in ${d} days, ${h} hours, ${m} minutes, and ${s} seconds.` 
-    
-  });
-
-
-  // I originally wanted the bot to dm the reminder to the user, but the bots doesnt have the perms :/
-  setTimeout(async () => {
-    await respond({
-      text: `<@${command.user_id}>\nReminder: ${reminderText}`
+  await respond({
+      text: `Okay! I will remind you to "${reminderText}" in ${d} days, ${h} hours, ${m} minutes, and ${s} seconds.`
     });
+
+  
+
+
+  // Finally got the required perms for my bot :>
+  setTimeout(async () => {
+    
+    await app.client.chat.postMessage({ 
+    channel: command.user_id,
+    text: `<@${command.user_id}>\nReminder: ${reminderText}` 
+    
+    });
+    
     }, (d * 24 * 60 * 60 + h * 60 * 60 + m * 60 + s) * 1000);
 
 });
